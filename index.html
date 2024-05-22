@@ -25,10 +25,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 100%;
             height: 60px;
             border-bottom: 1px solid #cccccc;
-            padding: 0 20px;
+            padding: 10px;
         }
         .header img {
             width: 80px;
@@ -38,9 +37,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 90%;
             min-height: calc(75vh);
-            padding: 20px;
         }
         .footer {
             border-top: 1px solid #cccccc;
@@ -53,24 +50,44 @@
         }
     </style>
     <script>
-        function loadChatbot() {
-            const selectedBotId = document.getElementById('chatbotSelector').value;
-            AIDBASE_CHATBOT_ID = selectedBotId;
+        function loadChatbot(botId) {
+            // Reload the page with the selected bot ID as a URL parameter
+            window.location.search = `?chatbot=${botId}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Get the chatbot ID from the URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const botId = urlParams.get('chatbot') || 'xnsZ1-GKRi9FSc8F3eBSw'; // Default bot ID
+
+            // Set the dropdown to the current bot ID
+            document.getElementById('chatbotSelector').value = botId;
+
+            // Create and append the chatbot script
             const script = document.createElement('script');
+            script.id = 'chatbot-script';
             script.type = 'text/javascript';
             script.async = true;
             script.src = 'https://client.aidbase.ai/chat-widget.ab.js';
+            script.onload = function() {
+                AIDBASE_CHATBOT_ID = botId;
+                if (typeof window.initChatbot === 'function') {
+                    window.initChatbot(); // Assuming the script exposes an initialization function
+                }
+            };
             document.body.appendChild(script);
-        }
+        });
     </script>
 </head>
 <body>
 <div class="header">
     <img alt="Logo" src="logo.jpeg"/>
-    <select id="chatbotSelector" class="dropdown" onchange="loadChatbot()">
-        <option value="xnsZ1-GKRi9FSc8F3eBSw">Chatbot 1</option>
-        <option value="anotherBotId1">Chatbot 2</option>
-        <option value="anotherBotId2">Chatbot 3</option>
+    <h2>Chatbot Test</h2>
+    <select id="chatbotSelector" class="dropdown" onchange="loadChatbot(this.value)">
+        <option value="xnsZ1-GKRi9FSc8F3eBSw">Smart Nexus Marketplace</option>
+        <option value="9EJrSdAKPlZQh2V7T2A7h">AuA24 AG</option>
+        <option value="58YTmcsZpCOgBO8amZx4U">Smart Lens</option>
+        <option value="Z-pmdgCLDY3MXKlvt4Zp8">Smart Data Center</option>
     </select>
 </div>
 <div class="content">
